@@ -1,0 +1,58 @@
+Watson for Twitter: Building a better twitter-bot 
+
+Objective:
+1 - Predict the propensity of an individual to retweet or favorite a tweet before it is sent
+2 - List the reasons that an individual will like or dislike a tweet before it is sent
+3 - Aggregate the scores so that a tweet can be optimized based on the model rules for the individuals and the number that are likely to retweet or favorite
+	3a - Calculate total reach based on the followers and their followers - calculate two hops
+4 - Optimize the time for sending each tweet to maximize the effect, including novelty premium, time of day, and day of week
+5 - Recommend the phrasing and layout of a tweet that is not a simple retweet to optimize impact
+6 - Twitter-bot should also recommend responses to mentions and handle FF automatically (with reasonable variation to make it more friendly)
+	
+Data Gathering:
+1 - Collect a sample of (all?) tweets sent and received by a set of users
+	1a - Need a minimum of 500 users for sample size
+	1b - Users likely use lists to filter their data stream
+		1b1 - Can we get those lists?  Are they public?
+		1b2 - Is there some way to know what hashtags they follow?  Perhaps look at frequency of the hashtags in their retweets (and tweets?).
+	1c - Need at least a 50/50 mix of retweets/favorites to non-retweeted timeline items
+	1d - Begin with a list of the top big data and analytics influencers
+		1d1 - Get all of their friends (people they follow)
+		1d2 - Get all of the original 100 influencers tweets for 1-3 weeks
+			1d2a - This will tell us what they retweeted
+		1d3 - Identify the most frequent 2-3 hashtags in their retweets
+		1d4 - Get all of the tweets from all of the friends for the same time period
+		1d5 - Get all of the tweets for the most common hashtags used in the retweets for the same time period
+	1e - Alternatively: Begin with a list of the top big data and analytics influencers
+		1e1 - Get all of the original 100 influencers tweets for 1-3 weeks
+			1e1a - This will tell us what they retweeted
+		1e2 - Compile a list of all the users that the influencers retweeted
+			1e2a - This list will give us a likely list of whom they are monitoring and a shorter list than all of their friends
+		1e3 - Identify the most frequent 2-3 hashtags in their retweets
+		1e4 - Get all of the tweets from the list of retweeted users for the same time period
+		1e5 - Get all of the tweets for the most common hashtags used in the retweets for the same time period
+		1e6 - Classify any tweets sent by the friends but not-retweeted by the influencers as unremarkable
+	1f - Deploy data collection as a service that will run in the background and continue to collect this data
+
+Data Preparation
+1 - The data structure will be different for the individual models that will be built
+2 - 
+
+Model Strategy
+1 - For each influencer, identify the likelihood that a tweet will be retweeted or favorited and why
+	1a - This is going to be done using a decision tree, C5 or CHAID becuase they handle the sparse data and generate an easy to understand rule set that can be output
+		1a1 - A logistic regression is an alternative if the text data is not sparse
+		1a2 - A neural net could be used for initial classification and propensity calculation, but a decision tree would have to follow to generate the rules
+2 - Secondary analysis will need to be done to determine the best way to aggregate results and generate a score for a potential tweet.
+	2a - It is unlikely a straight addition of the propensity scores for the user set would generate a reliable score
+	2b - Need to decide how to weight the value of different users
+		2b1 - Weights could be decided by the number of followers a user has (this is naive but reasonable before we have s score for each of their followers
+		2b2 - 
+3 - Analyze the timing of tweets relative to when they are retweeted in order to determine optimal timing for a tweet.
+	3a - This could be done for each tweet - limit the analysis and optimization to the set of users likely to retweet
+4 - Optimize the design of a tweet to maximize impact
+	4a - Based on features of content (not just a straight retweet), recommend the users that will retweet it and based on the rules for that content and those users, give the list of rules that should apply for the new tweet (which hashtags, phrasing as a question, key words, link, etc.)
+	4b - This should be applied to the rss feeds of new and original content
+	4c - This could also be applied to a library or archived tweets (mine and others) and quotes, etc.
+	
+	
